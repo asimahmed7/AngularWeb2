@@ -1,58 +1,145 @@
-<div class="main-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header card-header-danger">
-            <h4 class="card-title ">Employee Table</h4>
-            <p class="card-category"> Employee Table Subt/p>
-          </div>
-          <div class="card-body">
-            <div class="table-responsive">
-              <table class="table">
-                <thead class=" text-primary">
-                <th>
-                  Check
-                </th>
-                <th>
-                  Name
-                </th>
-                <th>
-                  Email
-                </th>
-                <th>
-                  Department
-                </th>
-                <th>
-                  Action
-                </th>
-                
-                <tbody>
+<div class="container">
+  <div class="main-content">
+    <div class="container-fluid">
+      <div class="row">
 
-                  <tr *ngFor="let emp of employees">
-                    <td>
-                     <input type="checkbox" id="{{emp.name}}">
-                    </td>
-                    <td>
-                      {{emp.name}}
-                    </td>
-                    <td>
-                      {{emp.email}}
-                    </td>
-                    <td>
-                     {{ emp.department}}
-                    </td>
+        <div class="form-group form-inline">
+          Full text search: <input class="form-control ml-2" type="text" name="searchTerm"
+            [(ngModel)]="empSvc.searchTerm" />
+          <span class="ml-3" *ngIf="empSvc.loading$ | async">Loading...</span>
+        </div>
 
-                    <td class="text-primary">
-                      <button mat-raised-button class="btn btn-primary" type="button" (click)="editEmpClick(emp.empID)">Edit</button>
-                    </td>
-                  </tr>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" sortable="name" (sort)="onSort($event)">Name</th>
+              <th scope="col" sortable="email" (sort)="onSort($event)">Email</th>
+              <th scope="col" sortable="department" (sort)="onSort($event)">Department</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let emp of employees$ | async; let i = index">
+              <td>
+                <input type="checkbox" id="{{emp.empID}}">
+              </td>
+              <td>
+              <ngb-highlight [result]="emp.name" [term]="empSvc.searchTerm"></ngb-highlight>
+              </td>
+              <td>
+                <ngb-highlight [result]="emp.email" [term]="empSvc.searchTerm"></ngb-highlight>
+              </td>
+              <td>
+                <select id="department{{i}}" [(ngModel)]="emp.department" class="form-control">
+                  <option value="">--Select--</option>
+                  <option *ngFor="let dept of listDept | async" value="{{dept['id']}}"> {{dept['name']}}
+                  </option>
+                </select>
+              </td>
+              <td> <button mat-raised-button class="btn btn-primary" type="button"
+                  (click)="editEmpClick(emp)">Edit</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-                </tbody>
-              </table>
+        <div class="d-flex justify-content-between p-2">
+          <ngb-pagination [collectionSize]="(total$ | async)!" [(page)]="empSvc.page" [pageSize]="empSvc.pageSize">
+          </ngb-pagination>
+
+          <select class="custom-select" style="width: auto" name="pageSize" [(ngModel)]="empSvc.pageSize">
+            <option [ngValue]="2">2 items per page</option>
+            <option [ngValue]="4">4 items per page</option>
+            <option [ngValue]="6">6 items per page</option>
+          </select>
+        </div>
+
+
+
+
+
+
+
+        <!-- 
+
+
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header card-header-danger">
+              <h4 class="card-title ">Employee Table</h4>
+              <p class="card-category"> Employee Table Subtitle </p>
+            </div>
+            <div class="row">
+
+              <app-listfilter [totalRecords]="filtEmployees?.length" (valueChange)="filterEmployees($event)">
+              </app-listfilter>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead class=" text-primary">
+                    <th>
+                      Check
+                    </th>
+                    <th>
+                      Name
+                    </th>
+                    <th>
+                      Email
+                    </th>
+                    <th>
+                      Department
+                    </th>
+                    <th>
+                      Action
+                    </th>
+
+                  <tbody>
+
+                    <tr *ngFor="let emp of filtEmployees; let i = index">
+                      <td>
+                        <input type="checkbox" id="{{emp.name}}">
+                      </td>
+                      <td>
+                        {{emp.name}}
+                      </td>
+                      <td>
+                        {{emp.email}}
+                      </td>
+                      <td>
+                        <select id="department{{i}}" [(ngModel)]="emp.department" class="form-control">
+                          <option value="">--Select--</option>
+                          <option *ngFor="let dept of listDept | async" value="{{dept['id']}}"> {{dept['name']}}
+                          </option>
+                        </select>
+
+                      </td>
+
+                      <td class="text-primary">
+                        <button mat-raised-button class="btn btn-primary" type="button"
+                          (click)="editEmpClick(emp)">Edit</button>
+                      </td>
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
+       
+       
+       
+       
+       
+       
+       
+       
+       
         </div>
+       -->
+
+
       </div>
     </div>
   </div>
