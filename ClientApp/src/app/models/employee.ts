@@ -5,6 +5,8 @@ export class Employee {
   public name: string;
   public email: string;
   public department: string;
+  public joiningdate: Date;
+  public emptype: string;
   public employeeSkills: Skills[];
 
 }
